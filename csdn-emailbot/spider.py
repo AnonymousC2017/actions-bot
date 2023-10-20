@@ -10,7 +10,7 @@ from email.header import Header
 
 
 def getResult(DATE):
-    url = "http://www.fjsdsrmyy.com/showdoc.aspx?Id=4bbb332d-2c77-4d03-8f94-0a350343"
+    url = "http://www.fjsdsrmyy.com/showdoc.aspx?docname=%E5%91%A8%E4%B8%BD"
     headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
     }
@@ -56,7 +56,7 @@ def saveEmail(email_path, message):
 
 if __name__ == "__main__":
 
-    DATE = "11-03"
+    DATE = "11-01"
     flag,available = getResult(DATE)
     temp = ''
     if flag:
