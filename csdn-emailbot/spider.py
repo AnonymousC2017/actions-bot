@@ -1,81 +1,31 @@
 #!/bin/python
 #Coding="utf-8"
-
+from lxml import etree
 import sys
 import requests
-from bs4 import BeautifulSoup
-import json
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
 
 
-# 爬取访问量、排名等信息
-def getResult(CSDN_ID):
-    url = "https://blog.csdn.net/" + CSDN_ID
+def getResult(DATE):
+    url = "http://www.fjsdsrmyy.com/showdoc.aspx?Id=4bbb332d-2c77-4d03-8f94-0a350343"
     headers = {
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-        "accept-language": "zh-CN,zh;q=0.9"
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
     }
-
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        result = {
-            "nick_name": "",
-            "blog_title": "",
-            "profile": {}
-        }
-
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        # 爬取asideProfile信息
-        nick_name = soup.find("a", id="uid").get("title")
-        blog_title = soup.find("a", attrs={"href": url}).get_text().strip()
-        result["nick_name"] = nick_name
-        result["blog_title"] = blog_title
-
-        profile = {}
-        profile_data = []
-        data_info = soup.find("div", attrs={"class": "data-info d-flex item-tiling"})
-        data = data_info.find_all("dl", attrs={"class": "text-center"})
-        for num in data:
-            profile_data.append(num.attrs["title"])
-
-        grade_info = soup.find("div", attrs={"class": "grade-box clearfix"}).contents
-        point = grade_info[5].find("dd").attrs["title"]
-        week_rank = grade_info[3].attrs["title"]
-        total_rank = grade_info[7].attrs["title"]
-
-        profile["original"] = profile_data[0]
-        profile["fans"] = profile_data[1]
-        profile["like"] = profile_data[2]
-        profile["comment"] = profile_data[3]
-        profile["read"] = profile_data[4]
-        profile["point"] = point
-        profile["week_rank"] = week_rank
-        profile["total_rank"] = total_rank
-        result["profile"] = profile
-
-        return result
-
-
-# 生成信息
-def formatMessage(result):
-    message = ""
-    call = "亲爱的 " + result["nick_name"] + "，您的 CSDN profile 到啦\n\n"
-    profile = result["profile"]
-    original = "原创文章数目： " + profile["original"] + "\n"
-    fans = "粉丝： " + profile["fans"] + "\n"
-    like = "获赞： " + profile["like"] + "\n"
-    comment = "评论： " + profile["comment"] + "\n"
-    read = "访问量： " + profile["read"] + "\n"
-    point = "积分： " + profile["point"] + "\n"
-    week_rank = "周排名： " + profile["week_rank"] + "\n"
-    total_rank = "总排名： " + profile["total_rank"]
-
-    message += call + original + fans + like + comment + read + point + week_rank + total_rank
-    return message
+    res = requests.get(url, headers=headers)
+    flag = False
+    available = []
+    tree = etree.HTML(res.text)
+    items = tree.xpath('//div[@class="bookingList"]/ul/li')
+    for item in items:
+        date = item.xpath('./h1/text()')[0].split(" ")
+        m_d = date[0].split("2023-")[1]
+        if m_d == DATE:
+            flag = True
+            if item.xpath('./a/text()')[0] == "可预约":
+                available.append(DATE + date[2])
+    return flag,available
 
 
 # 发送邮件
@@ -105,9 +55,15 @@ def saveEmail(email_path, message):
 
 if __name__ == "__main__":
 
-    CSDN_ID = sys.argv[1]
-
-    res = getResult(CSDN_ID)
-    message = formatMessage(res)
-    email_path = "email.txt"
-    saveEmail(email_path, message)
+    DATE = sys.argv[1]
+    flag,available = getResult(DATE)
+    temp = ''
+    if flag:
+        if len(available) > 0:
+            for avail in available:
+                temp += avail
+            message = temp+"可预约"
+        else:
+            message = "即将可预约"
+        email_path = "email.txt"
+        saveEmail(email_path, message)
