@@ -8,6 +8,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 
 
+
 def getResult(DATE):
     url = "http://www.fjsdsrmyy.com/showdoc.aspx?Id=4bbb332d-2c77-4d03-8f94-0a350343"
     headers = {
