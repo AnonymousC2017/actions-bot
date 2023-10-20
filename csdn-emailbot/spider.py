@@ -55,7 +55,7 @@ def saveEmail(email_path, message):
 
 if __name__ == "__main__":
 
-    DATE = sys.argv[1]
+    DATE = "11-03"
     flag,available = getResult(DATE)
     temp = ''
     if flag:
