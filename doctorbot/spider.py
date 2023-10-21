@@ -62,7 +62,7 @@ def sendWx(message,BOOK_DATE,doctor_name):
 
 if __name__ == "__main__":
 
-    BOOK_DATE = os.environ["DATE"]
+    BOOK_DATE = os.environ["BOOK_DATE"]
     SITE = os.environ["SITE"]
 
 
