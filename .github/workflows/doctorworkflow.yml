@@ -21,13 +21,13 @@ jobs:
       #   run: python -m pip install --upgrade pip
       - name: 'Install requirements'
         run: pip install -r ./doctorbot/requirements.txt
+      - name: 'Working'
+        run: bash ./doctorbot/main.sh
         env:
           APP_ID: ${{ secrets.APP_ID }}
           APP_SECRET: ${{ secrets.APP_SECRET }}
           USER_ID: ${{ secrets.USER_ID }}
-          TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }} 
-      - name: 'Working'
-        run: bash ./doctorbot/main.sh
+          TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@master
         with:
