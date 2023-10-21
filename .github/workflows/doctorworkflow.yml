@@ -10,6 +10,7 @@ on:
 jobs:
   doctorbot:
     runs-on: ubuntu-latest
+    environment: var
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -24,8 +25,8 @@ jobs:
       - name: 'Working'
         run: bash ./doctorbot/main.sh
         env:
-          BOOK_DATE: ${{ vars.var.DATE }}
-          SITE: ${{ vars.var.SITE }}
+          BOOK_DATE: ${{ vars.DATE }}
+          SITE: ${{ vars.SITE }}
           APP_ID: ${{ secrets.APP_ID }}
           APP_SECRET: ${{ secrets.APP_SECRET }}
           USER_ID: ${{ secrets.USER_ID }}
