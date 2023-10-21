@@ -10,6 +10,7 @@ import os
 from wechatpy import WeChatClient
 from wechatpy.client.api import WeChatMessage, WeChatTemplate
 from datetime import datetime
+import pytz
 
 
 def getResult(DATE,SITE):
@@ -45,11 +46,12 @@ def sendWx(message,BOOK_DATE,doctor_name):
     template_ids = os.environ["TEMPLATE_ID"]
     client = WeChatClient(app_id, app_secret)
     wm = WeChatMessage(client)
-    now = datetime.now()
+    china_tz = pytz.timezone('Asia/Shanghai')
+    now = datetime.now(china_tz)
     now_formatted = now.strftime('%Y-%m-%d %H:%M')
     data = {
         "now_formatted": {"value":now_formatted},
-        "doctor_name":{"value":doctor_name} ,
+        "doctor_name": {"value":doctor_name},
         "message":{"value":message},
         "BOOK_DATE": {"value":BOOK_DATE},
     }
