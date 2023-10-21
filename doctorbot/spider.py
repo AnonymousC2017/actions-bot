@@ -21,7 +21,7 @@ def getResult(DATE,SITE):
     available = []
     tree = etree.HTML(res.text)
     items = tree.xpath('//div[@class="bookingList"]/ul/li')
-    doctor_name = tree.xpath('//div[@class=""docBox]/div[@class="docNav"]/span/i/text()')
+    doctor_name = tree.xpath('//div[@class="docBox"]/div[@class="docNav"]/span/i/text()')
     for item in items:
         date = item.xpath('./h1/text()')[0].split(" ")
         m_d = date[0].split("2023-")[1]
