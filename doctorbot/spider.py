@@ -6,10 +6,10 @@ import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
-
-# from wechatpy import WeChatClient
-# from wechatpy.client.api import WeChatMessage, WeChatTemplate
-
+import os
+from wechatpy import WeChatClient
+from wechatpy.client.api import WeChatMessage, WeChatTemplate
+from datetime import datetime
 
 
 def getResult(DATE,SITE):
@@ -21,6 +21,7 @@ def getResult(DATE,SITE):
     available = []
     tree = etree.HTML(res.text)
     items = tree.xpath('//div[@class="bookingList"]/ul/li')
+    doctor_name = tree.xpath('//div[@class=""docBox]/div[@class="docNav"]/span/i/text()')
     for item in items:
         date = item.xpath('./h1/text()')[0].split(" ")
         m_d = date[0].split("2023-")[1]
@@ -28,53 +29,41 @@ def getResult(DATE,SITE):
             flag = True
             if item.xpath('./a/text()')[0] == "可预约":
                 available.append(DATE + date[2])
-    return flag,available
-
-
-# 发送邮件
-# def sendEmail(content):
-#     message = MIMEText(content, 'plain', 'utf-8')
-#     message['From'] = "GitHub Actions<" + sender + ">"
-#     message['To'] = "<" + receiver + ">"
-#
-#     subject = "CSDN Report"
-#     message['Subject'] = Header(subject, 'utf-8')
-#
-#     try:
-#         smtpObj = smtplib.SMTP_SSL(mail_host, mail_port)
-#         smtpObj.login(mail_user, mail_password)
-#         smtpObj.sendmail(sender, receiver, message.as_string())
-#         print("邮件发送成功")
-#
-#     except smtplib.SMTPException:
-#         print("Error: 无法发送邮件")
+    return flag,available,doctor_name
 
 
 # 保存email内容
 def saveEmail(email_path, message):
+
     with open(email_path, 'w', encoding="utf-8") as email:
         email.writelines(message)
 
-
+def sendWx(message,BOOK_DATE,doctor_name):
+    app_id = os.environ["APP_ID"]
+    app_secret = os.environ["APP_SECRET"]
+    user_ids = os.environ["USER_ID"].split(',')
+    template_ids = os.environ["TEMPLATE_ID"]
+    client = WeChatClient(app_id, app_secret)
+    wm = WeChatMessage(client)
+    now = datetime.now()
+    now_formatted = now.strftime('%Y-%m-%d %H:%M')
+    for i in range(len(user_ids)):
+        wm.send_template(user_ids[i], template_ids, now_formatted,BOOK_DATE, message,doctor_name)
 
 
 if __name__ == "__main__":
 
-    DATE = sys.argv[1]
+    BOOK_DATE = sys.argv[1]
     SITE = sys.argv[2]
-    flag,available = getResult(DATE,SITE)
+    flag,available,doctor_name = getResult(BOOK_DATE,SITE)
     temp = ''
     if flag:
         if len(available) > 0:
             for avail in available:
                 temp += avail
-            message = temp+"可预约"
+            message = doctor_name + temp+"可预约"
         else:
-            message = "即将可预约"
+            message = doctor_name + "即将可预约"
         email_path = "email.txt"
         saveEmail(email_path, message)
-
-    #
-    # client = WeChatClient(app_id, app_secret)
-    # wm = WeChatMessage(client)
-    # wm.send_template(,, )
+        sendWx(message,BOOK_DATE,doctor_name)
