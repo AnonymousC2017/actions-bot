@@ -24,8 +24,8 @@ jobs:
       - name: 'Working'
         run: bash ./doctorbot/main.sh
         env:
-          BOOK_DATE: ${{ var.DATE }}
-          SITE: ${{ var.SITE }}
+          BOOK_DATE: ${{ vars.DATE }}
+          SITE: ${{ vars.SITE }}
           APP_ID: ${{ secrets.APP_ID }}
           APP_SECRET: ${{ secrets.APP_SECRET }}
           USER_ID: ${{ secrets.USER_ID }}
