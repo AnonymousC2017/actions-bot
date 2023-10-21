@@ -25,7 +25,7 @@ jobs:
           APP_ID: ${{ secrets.APP_ID }}
           APP_SECRET: ${{ secrets.APP_SECRET }}
           USER_ID: ${{ secrets.USER_ID }}
-          TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+          TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }} 
       - name: 'Working'
         run: bash ./doctorbot/main.sh
       - name: 'Send mail'
