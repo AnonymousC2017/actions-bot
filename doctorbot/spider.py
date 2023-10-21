@@ -20,7 +20,7 @@ def getResult(DATE,SITE):
     res = requests.get(SITE, headers=headers)
     flag = False
     available = []
-    tree = etree.HTML(res.text)
+    tree = etree.HTML(res.text) 
     items = tree.xpath('//div[@class="bookingList"]/ul/li')
     doctor_name = tree.xpath('//div[@class="docBox"]/div[@class="docNav"]/span/i/text()')[0]
     for item in items:
