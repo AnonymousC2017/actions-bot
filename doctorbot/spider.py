@@ -47,7 +47,7 @@ def sendWx(message,BOOK_DATE,doctor_name):
     wm = WeChatMessage(client)
     now = datetime.now()
     now_formatted = now.strftime('%Y-%m-%d %H:%M')
-    template = {
+    data = {
         "now_formatted":now_formatted,
         "doctor_name":doctor_name ,
         "message": message,
@@ -55,7 +55,7 @@ def sendWx(message,BOOK_DATE,doctor_name):
     }
 
     for i in range(len(user_ids)):
-        wm.send_template(user_ids[i], template_ids, template) 
+        wm.send_template(user_ids[i], template_ids, data)
 
 
 if __name__ == "__main__":
