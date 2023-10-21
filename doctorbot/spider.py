@@ -62,8 +62,10 @@ def sendWx(message,BOOK_DATE,doctor_name):
 
 if __name__ == "__main__":
 
-    BOOK_DATE = sys.argv[1]
-    SITE = sys.argv[2]
+    BOOK_DATE = os.environ["DATE"]
+    SITE = os.environ["SITE"]
+
+
     flag,available,doctor_name = getResult(BOOK_DATE,SITE)
     temp = ''
     if flag: # 出号了
