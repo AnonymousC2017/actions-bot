@@ -57,7 +57,6 @@ if __name__ == "__main__":
 
     DATE = sys.argv[1]
     SITE = sys.argv[2]
-    TIME = sys.argv[3]
     flag,available = getResult(DATE,SITE)
     temp = ''
     if flag:
