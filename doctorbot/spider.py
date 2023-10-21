@@ -20,7 +20,7 @@ def getResult(DATE,SITE):
     res = requests.get(SITE, headers=headers)
     flag = False
     available = []
-    tree = etree.HTML(res.text) 
+    tree = etree.HTML(res.text)
     items = tree.xpath('//div[@class="bookingList"]/ul/li')
     doctor_name = tree.xpath('//div[@class="docBox"]/div[@class="docNav"]/span/i/text()')[0]
     for item in items:
@@ -66,13 +66,13 @@ if __name__ == "__main__":
     SITE = sys.argv[2]
     flag,available,doctor_name = getResult(BOOK_DATE,SITE)
     temp = ''
-    if flag:
+    if flag: # 出号了
         if len(available) > 0:
             for avail in available:
                 temp += avail
-            message =  temp+"可预约"
+            message =  temp + "可预约"
         else:
-            message =   "即将可预约"
+            message = "约满了 请重新定一个日期"
         email_path = "email.txt"
         saveEmail(email_path, message)
-        sendWx(message,BOOK_DATE,doctor_name)
+        sendWx(message, BOOK_DATE, doctor_name)
