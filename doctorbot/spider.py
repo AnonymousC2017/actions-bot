@@ -7,8 +7,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
 
-from wechatpy import WeChatClient
-from wechatpy.client.api import WeChatMessage, WeChatTemplate
+# from wechatpy import WeChatClient
+# from wechatpy.client.api import WeChatMessage, WeChatTemplate
 
 
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
         email_path = "email.txt"
         saveEmail(email_path, message)
 
-
-    client = WeChatClient(app_id, app_secret)
-    wm = WeChatMessage(client)
-    wm.send_template(,, )
+    #
+    # client = WeChatClient(app_id, app_secret)
+    # wm = WeChatMessage(client)
+    # wm.send_template(,, )
