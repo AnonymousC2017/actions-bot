@@ -1,4 +1,4 @@
-name: 'GitHub Actions CSDN Email Bot'
+name: 'doctorBot'
 
 on:
   push:
