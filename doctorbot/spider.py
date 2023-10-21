@@ -61,9 +61,9 @@ if __name__ == "__main__":
         if len(available) > 0:
             for avail in available:
                 temp += avail
-            message = doctor_name + temp+"可预约"
+            message =  temp+"可预约"
         else:
-            message = doctor_name + "即将可预约"
+            message =   "即将可预约"
         email_path = "email.txt"
         saveEmail(email_path, message)
         sendWx(message,BOOK_DATE,doctor_name)
