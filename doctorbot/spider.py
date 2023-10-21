@@ -55,7 +55,7 @@ def sendWx(message,BOOK_DATE,doctor_name):
     }
 
     for i in range(len(user_ids)):
-        wm.send_template(user_ids[i], template_ids, template)
+        wm.send_template(user_ids[i], template_ids, template) 
 
 
 if __name__ == "__main__":
