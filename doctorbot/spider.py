@@ -48,10 +48,10 @@ def sendWx(message,BOOK_DATE,doctor_name):
     now = datetime.now()
     now_formatted = now.strftime('%Y-%m-%d %H:%M')
     data = {
-        "now_formatted":now_formatted,
-        "doctor_name":doctor_name ,
-        "message": message,
-        "BOOK_DATE": BOOK_DATE,
+        "now_formatted": {"value":now_formatted},
+        "doctor_name":{"value":doctor_name} ,
+        "message":{"value":message},
+        "BOOK_DATE": {"value":BOOK_DATE},
     }
 
     for i in range(len(user_ids)):
