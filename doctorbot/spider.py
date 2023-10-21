@@ -75,6 +75,9 @@ if __name__ == "__main__":
             message =  temp + "可预约"
         else:
             message = "约满了 请重新定一个日期"
-        email_path = "email.txt"
-        saveEmail(email_path, message)
-        sendWx(message, BOOK_DATE, doctor_name)
+
+        sendWx(message, BOOK_DATE, doctor_name) # 出号了才向微信推消息。
+    else:
+        message = "还未出号"
+    email_path = "email.txt"
+    saveEmail(email_path, message)
