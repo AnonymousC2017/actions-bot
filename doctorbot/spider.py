@@ -26,10 +26,10 @@ def getResult(DATE,SITE):
     for item in items:
         date = item.xpath('./h1/text()')[0].split(" ")
         m_d = date[0].split("2023-")[1]
-        if m_d == DATE:
+        if m_d in DATE:
             flag = True
             if item.xpath('./a/text()')[0] == "可预约":
-                available.append(DATE + date[2])
+                available.append(m_d + date[2])
     return flag,available,doctor_name
 
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
         sendWx(message, BOOK_DATE, doctor_name) # 出号了才向微信推消息。
     else:
-        message = "还未出号"
+        message = "都还还未出号"
     email_path = "email.txt"
     saveEmail(email_path, message)
     
