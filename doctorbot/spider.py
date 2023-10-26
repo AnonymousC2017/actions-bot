@@ -88,8 +88,8 @@ if __name__ == "__main__":
     SITE = os.environ["SITE"]
 
     flag, bookable, full, doctor_name = getResult(BOOK_DATE, SITE)
-    bookable_string = ""
-    full_string = ""
+    bookable_string = "无"
+    full_string = "无"
     push_msg = False
     if flag:
         if len(bookable) > 0:
