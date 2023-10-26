@@ -31,6 +31,8 @@ jobs:
           APP_SECRET: ${{ secrets.APP_SECRET }}
           USER_ID: ${{ secrets.USER_ID }}
           TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@master
         with:

@@ -3,13 +3,12 @@
 import os
 import re
 from datetime import datetime
-import random
 import pytz
 import requests
 from lxml import etree
 from wechatpy import WeChatClient
 from wechatpy.client.api import WeChatMessage,WeChatTemplate
-
+import json
 
 def getResult(DATE, SITE):
     headers = {
@@ -40,32 +39,50 @@ def saveEmail(email_path, message):
     with open(email_path, 'w', encoding="utf-8") as email:
         email.writelines(message)
 
-def sendWx(bookable_list, full_list, BOOK_DATE, doctor_name):
+def sendWx(bookable_list, full_list, BOOK_DATE, doctor_name,now_formatted):
     app_id = os.environ["APP_ID"]
     app_secret = os.environ["APP_SECRET"]
     user_ids = os.environ["USER_ID"].split(',')
     template_ids = os.environ["TEMPLATE_ID"]
     client = WeChatClient(app_id, app_secret)
     wm = WeChatMessage(client)
-    china_tz = pytz.timezone('Asia/Shanghai')
-    now = datetime.now(china_tz)
-    now_formatted = now.strftime('%Y-%m-%d %H:%M')
+
     data = {
-        "now_formatted": {"value": now_formatted,"color":"#173177"},
-        "doctor_name": {"value": doctor_name,"color":"#173177"},
-        "bookable_list": {"value": bookable_list,"color":"#173177"},
-        "full_list": {"value": full_list,"color":"#173177"},
-        "BOOK_DATE": {"value": BOOK_DATE,"color":"#173177"},
+        "now_formatted": {"value": now_formatted},
+        "doctor_name": {"value": doctor_name},
+        "bookable_list": {"value": bookable_list},
+        "full_list": {"value": full_list},
+        "BOOK_DATE": {"value": BOOK_DATE},
     }
 
     for i in range(len(user_ids)):
         wm.send_template(user_ids[i], template_ids, data)
 
+def send_msg(msg,at_all=False):
+    ACCESS_TOKEN = os.environ["ACCESS_TOKEN"]
+    url = 'https://oapi.dingtalk.com/robot/send?access_token=' + ACCESS_TOKEN
+    headers = {'Content-Type': 'application/json;charset=utf-8'}
+    content_str = "挂号:\n\n{0}\n".format(msg)
+
+    data = {
+        "msgtype": "text",
+        "text": {
+            "content": content_str
+        },
+        "at": {
+            "isAtAll": at_all
+        },
+    }
+    requests.post(url, data=json.dumps(data), headers=headers)
+
 
 if __name__ == "__main__":
     FORMATED_MESSAGE = """
-    当前可预约:{0}
-    已约满:{1}
+    当前时间:{0}
+    医师:{1}
+    预约时间:{2}
+    已约满:{3}
+    当前可预约:{4}
     """
     BOOK_DATE = os.environ["BOOK_DATE"]
     SITE = os.environ["SITE"]
@@ -89,10 +106,16 @@ if __name__ == "__main__":
             match = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])', full[-1])[0]
             if match == BOOK_DATE[-1]:
                 full_string = "全部约满了 请重新定一个日期"
+        china_tz = pytz.timezone('Asia/Shanghai')
+        now = datetime.now(china_tz)
+        now_formatted = now.strftime('%Y-%m-%d %H:%M')
+
         if push_wx:
-            sendWx(bookable_string, full_string, BOOK_DATE, doctor_name)  # 向微信推消息。
-        email_message = FORMATED_MESSAGE.format(bookable_string, full_string)
+            sendWx(now_formatted,bookable_string, full_string, BOOK_DATE, doctor_name)  # 向钉钉推送消息
+            message = FORMATED_MESSAGE.format(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)
+            send_msg(message) # 向钉钉推送消息
+
     else:
-        email_message = "全都未出号"
+        message = "全都未出号"
     email_path = "email.txt"
-    saveEmail(email_path, email_message)
+    saveEmail(email_path, message)
