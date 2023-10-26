@@ -90,10 +90,10 @@ if __name__ == "__main__":
     flag, bookable, full, doctor_name = getResult(BOOK_DATE, SITE)
     bookable_string = ""
     full_string = ""
-    push_wx = False
+    push_msg = False
     if flag:  # 出号了
         if len(bookable) > 0:
-            push_wx = True
+            push_msg = True
             temp = []
             for b in bookable:
                 temp.append(b)
@@ -104,21 +104,21 @@ if __name__ == "__main__":
                 temp.append(f)
             full_string = "  ".join(temp)
         if len(bookable) == 0 and len(full) > 0:
-            push_wx = True
             matches = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])', full[-1])
             if matches:
                 if matches[0] == BOOK_DATE[-1]:
-                    full_string = "全部约满了 请重新定一个日期"
+                    full_string = "全部约满了 请重新定日期"
+                    push_msg = True
         china_tz = pytz.timezone('Asia/Shanghai')
         now = datetime.now(china_tz)
         now_formatted = now.strftime('%Y-%m-%d %H:%M')
 
-        if push_wx:
-            # sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)  # 向钉钉推送消息
-            message = FORMATED_MESSAGE.format(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)
-            # send_msg(message) # 向钉钉推送消息
+        if push_msg: #推送
+            message = FORMATED_MESSAGE.format(now_formatted, doctor_name, BOOK_DATE, full_string, bookable_string)
+            sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)  # 向钉钉推送消息
+            send_msg(message) # 向钉钉推送消息
 
     else:
         message = "未出号"
     email_path = "email.txt"
-    saveEmail(email_path, message+str(push_wx))
+    saveEmail(email_path, message)
