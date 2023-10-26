@@ -66,7 +66,10 @@ def sendWx(bookable_list,full_list,BOOK_DATE,doctor_name):
 
 
 if __name__ == "__main__":
-
+    FORMATED_MESSAGE = """
+    当前可预约:{0}
+    已约满:{1}
+    """
     BOOK_DATE = os.environ["BOOK_DATE"]
     SITE = os.environ["SITE"]
 
@@ -89,8 +92,9 @@ if __name__ == "__main__":
                 full_list = "全部约满了 请重新定一个日期"
 
         sendWx(bookable_list,full_list, BOOK_DATE, doctor_name) # 出号了才向微信推消息。
+        email_message = FORMATED_MESSAGE.format(bookable_list,full_list)
     else:
-        message = "全都未出号"
+        email_message = "全都未出号"
     email_path = "email.txt"
-    saveEmail(email_path, message)
+    saveEmail(email_path,email_message)
     
