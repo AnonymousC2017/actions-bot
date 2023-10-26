@@ -114,11 +114,11 @@ if __name__ == "__main__":
         now_formatted = now.strftime('%Y-%m-%d %H:%M')
 
         if push_wx:
-            sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)  # 向钉钉推送消息
+            # sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)  # 向钉钉推送消息
             message = FORMATED_MESSAGE.format(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)
-            send_msg(message) # 向钉钉推送消息
+            # send_msg(message) # 向钉钉推送消息
 
     else:
         message = "未出号"
     email_path = "email.txt"
-    saveEmail(email_path, message+bookable+len(bookable))
+    saveEmail(email_path, message+len(bookable))
