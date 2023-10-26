@@ -8,7 +8,7 @@ import pytz
 import requests
 from lxml import etree
 from wechatpy import WeChatClient
-from wechatpy.client.api import WeChatMessage
+from wechatpy.client.api import WeChatMessage,WeChatTemplate
 
 
 def getResult(DATE, SITE):
