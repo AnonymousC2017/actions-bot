@@ -55,8 +55,8 @@ def sendWx(bookable_list, full_list, BOOK_DATE, doctor_name):
         "now_formatted": {"value": now_formatted},
         "doctor_name": {"value": doctor_name},
         "bookable_list": {"value": bookable_list},
-        "full_list": {"value": full_list},
-        "BOOK_DATE": {"value": BOOK_DATE},
+        "full_list": {"value": full_list,"color": "#dcdcdc"},
+        "BOOK_DATE": {"value": BOOK_DATE,"color": "#FF0000"},
     }
 
     for i in range(len(user_ids)):
