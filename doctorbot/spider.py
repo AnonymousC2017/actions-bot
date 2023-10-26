@@ -103,9 +103,10 @@ if __name__ == "__main__":
             full_string = "  ".join(temp)
         if len(bookable) == 0 and len(full) > 0:
             push_wx = True
-            match = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])', full[-1])[0]
-            if match == BOOK_DATE[-1]:
-                full_string = "全部约满了 请重新定一个日期"
+            matches = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])', full[-1])
+            if matches:
+                if matches[0] == BOOK_DATE[-1]:
+                    full_string = "全部约满了 请重新定一个日期"
         china_tz = pytz.timezone('Asia/Shanghai')
         now = datetime.now(china_tz)
         now_formatted = now.strftime('%Y-%m-%d %H:%M')
@@ -116,6 +117,6 @@ if __name__ == "__main__":
             send_msg(message) # 向钉钉推送消息
 
     else:
-        message = "全都未出号"
+        message = "未出号"
     email_path = "email.txt"
     saveEmail(email_path, message)
