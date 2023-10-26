@@ -91,7 +91,7 @@ if __name__ == "__main__":
     bookable_string = ""
     full_string = ""
     push_msg = False
-    if flag:  # 出号了
+    if flag:
         if len(bookable) > 0:
             push_msg = True
             temp = []
@@ -112,13 +112,12 @@ if __name__ == "__main__":
         china_tz = pytz.timezone('Asia/Shanghai')
         now = datetime.now(china_tz)
         now_formatted = now.strftime('%Y-%m-%d %H:%M')
-
+        message = FORMATED_MESSAGE.format(now_formatted, doctor_name, BOOK_DATE, full_string, bookable_string)
         if push_msg: #推送
-            message = FORMATED_MESSAGE.format(now_formatted, doctor_name, BOOK_DATE, full_string, bookable_string)
             sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)  # 向钉钉推送消息
             send_msg(message) # 向钉钉推送消息
 
     else:
-        message = "未出号"
+        message = "全都未出号"
     email_path = "email.txt"
     saveEmail(email_path, message)
