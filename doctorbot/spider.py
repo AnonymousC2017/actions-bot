@@ -87,7 +87,7 @@ if __name__ == "__main__":
             match = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])', full[-1])[0]
             if match == BOOK_DATE[-1]:
                 full_list = "全部约满了 请重新定一个日期"
-        full_list = ['11-08星期三上午', '11-08星期三下午']
+        full_list = '11-08星期三上午'+'11-08星期三下午'
         sendWx(bookable_list, full_list, BOOK_DATE, doctor_name)  # 向微信推消息。
         email_message = FORMATED_MESSAGE.format(bookable_list, full_list)
     else:
