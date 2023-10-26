@@ -3,4 +3,3 @@ requests
 wechatpy
 cryptography
 pytz
-re
