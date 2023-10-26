@@ -50,8 +50,8 @@ def sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string):
     data = {
         "now_formatted": {"value": now_formatted},
         "doctor_name": {"value": doctor_name},
-        "bookable_list": {"value": bookable_list},
-        "full_list": {"value": full_list},
+        "bookable_list": {"value": bookable_string},
+        "full_list": {"value": full_string},
         "BOOK_DATE": {"value": BOOK_DATE},
     }
 
