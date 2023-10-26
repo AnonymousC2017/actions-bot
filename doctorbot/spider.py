@@ -121,4 +121,4 @@ if __name__ == "__main__":
     else:
         message = "未出号"
     email_path = "email.txt"
-    saveEmail(email_path, message)
+    saveEmail(email_path, message+bookable+len(bookable))
