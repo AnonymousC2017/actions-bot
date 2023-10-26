@@ -39,7 +39,8 @@ def getResult(DATE, SITE):
 def saveEmail(email_path, message):
     with open(email_path, 'w', encoding="utf-8") as email:
         email.writelines(message)
-
+def get_random_color():
+  return "#%06x" % random.randint(0, 0xFFFFFF)
 
 def sendWx(bookable_list, full_list, BOOK_DATE, doctor_name):
     app_id = os.environ["APP_ID"]
@@ -55,8 +56,8 @@ def sendWx(bookable_list, full_list, BOOK_DATE, doctor_name):
         "now_formatted": {"value": now_formatted},
         "doctor_name": {"value": doctor_name},
         "bookable_list": {"value": bookable_list},
-        "full_list": {"value": full_list,"color": "#dcdcdc"},
-        "BOOK_DATE": {"value": BOOK_DATE,"color": "#FF0000"},
+        "full_list": {"value": full_list,"color": get_random_color()},
+        "BOOK_DATE": {"value": BOOK_DATE,"color": get_random_color()},
     }
 
     for i in range(len(user_ids)):
@@ -72,9 +73,10 @@ if __name__ == "__main__":
     SITE = os.environ["SITE"]
 
     flag, bookable, full, doctor_name = getResult(BOOK_DATE, SITE)
-
+    push_wx = False
     if flag:  # 出号了
         if len(bookable) > 0:
+            push_wx = True
             temp = []
             for b in bookable:
                 temp.append(b)
@@ -85,12 +87,12 @@ if __name__ == "__main__":
                 temp.append(f)
             full_string = "  ".join(temp)
         if len(bookable) == 0 and len(full) > 0:
-
+            push_wx = True
             match = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])', full[-1])[0]
             if match == BOOK_DATE[-1]:
                 full_string = "全部约满了 请重新定一个日期"
-
-        sendWx(bookable_string, full_string, BOOK_DATE, doctor_name)  # 向微信推消息。
+        if push_wx:
+            sendWx(bookable_string, full_string, BOOK_DATE, doctor_name)  # 向微信推消息。
         email_message = FORMATED_MESSAGE.format(bookable_string, full_string)
     else:
         email_message = "全都未出号"
