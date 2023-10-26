@@ -11,7 +11,7 @@ from wechatpy import WeChatClient
 from wechatpy.client.api import WeChatMessage, WeChatTemplate
 from datetime import datetime
 import pytz
-
+import re
 
 def getResult(DATE,SITE):
     headers = {
@@ -19,7 +19,8 @@ def getResult(DATE,SITE):
     }
     res = requests.get(SITE, headers=headers)
     flag = False
-    available = []
+    bookable = []
+    full = []
     tree = etree.HTML(res.text)
     items = tree.xpath('//div[@class="bookingList"]/ul/li')
     doctor_name = tree.xpath('//div[@class="docBox"]/div[@class="docNav"]/span/i/text()')[0]
@@ -28,9 +29,12 @@ def getResult(DATE,SITE):
         m_d = date[0].split("2023-")[1]
         if m_d in DATE:
             flag = True
+            time = m_d + date[1] + date[2]
             if item.xpath('./a/text()')[0] == "可预约":
-                available.append(m_d + date[2])
-    return flag,available,doctor_name
+                bookable.append(time)
+            else:
+                full.append(time)
+    return flag,bookable,full,doctor_name
 
 
 # 保存email内容
@@ -39,7 +43,7 @@ def saveEmail(email_path, message):
     with open(email_path, 'w', encoding="utf-8") as email:
         email.writelines(message)
 
-def sendWx(message,BOOK_DATE,doctor_name):
+def sendWx(bookable_list,full_list,BOOK_DATE,doctor_name):
     app_id = os.environ["APP_ID"]
     app_secret = os.environ["APP_SECRET"]
     user_ids = os.environ["USER_ID"].split(',')
@@ -52,7 +56,8 @@ def sendWx(message,BOOK_DATE,doctor_name):
     data = {
         "now_formatted": {"value":now_formatted},
         "doctor_name": {"value":doctor_name},
-        "message":{"value":message},
+        "bookable_list":{"value":bookable_list},
+        "full_list":{"value":full_list},
         "BOOK_DATE": {"value":BOOK_DATE},
     }
 
@@ -66,19 +71,26 @@ if __name__ == "__main__":
     SITE = os.environ["SITE"]
 
 
-    flag,available,doctor_name = getResult(BOOK_DATE,SITE)
-    temp = ''
+    flag,bookable,full,doctor_name = getResult(BOOK_DATE,SITE)
+    bookable_list = []
+    full_list = []
     if flag: # 出号了
-        if len(available) > 0:
-            for avail in available:
-                temp += avail
-            message =  temp + "可预约"
-        else:
-            message = "约满了 请重新定一个日期"
+        if len(bookable) > 0:
+            for b in bookable:
+                bookable_list += b
+        if len(full) > 0:
+            for f in full:
+                full_list += f
 
-        sendWx(message, BOOK_DATE, doctor_name) # 出号了才向微信推消息。
+        if len(bookable) == 0 and len(full) > 0:
+
+            match = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])',full[-1])[0]
+            if match == BOOK_DATE[-1]:
+                full_list = "全部约满了 请重新定一个日期"
+
+        sendWx(bookable_list,full_list, BOOK_DATE, doctor_name) # 出号了才向微信推消息。
     else:
-        message = "都还还未出号"
+        message = "全都未出号"
     email_path = "email.txt"
     saveEmail(email_path, message)
     
