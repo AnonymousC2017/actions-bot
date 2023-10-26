@@ -53,11 +53,11 @@ def sendWx(bookable_list, full_list, BOOK_DATE, doctor_name):
     now = datetime.now(china_tz)
     now_formatted = now.strftime('%Y-%m-%d %H:%M')
     data = {
-        "now_formatted": {"value": now_formatted},
-        "doctor_name": {"value": doctor_name},
-        "bookable_list": {"value": bookable_list},
-        "full_list": {"value": full_list,"color": get_random_color()},
-        "BOOK_DATE": {"value": BOOK_DATE,"color": get_random_color()},
+        "now_formatted": {"value": now_formatted,"color":"#173177"},
+        "doctor_name": {"value": doctor_name,"color":"#173177"},
+        "bookable_list": {"value": bookable_list,"color":"#173177"},
+        "full_list": {"value": full_list,"color":"#173177"},
+        "BOOK_DATE": {"value": BOOK_DATE,"color":"#173177"},
     }
 
     for i in range(len(user_ids)):
