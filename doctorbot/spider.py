@@ -72,24 +72,26 @@ if __name__ == "__main__":
     SITE = os.environ["SITE"]
 
     flag, bookable, full, doctor_name = getResult(BOOK_DATE, SITE)
-    bookable_list = []
-    full_list = []
+
     if flag:  # 出号了
         if len(bookable) > 0:
+            temp = []
             for b in bookable:
-                bookable_list.append(b)
+                temp.append(b)
+            bookable_string = "  ".join(temp)
         if len(full) > 0:
+            temp = []
             for f in full:
-                full_list.append(f)
-
+                temp.append(f)
+            full_string = "  ".join(temp)
         if len(bookable) == 0 and len(full) > 0:
 
             match = re.findall(r'(?<=-)\d{2}-\d{2}(?=[^\d])', full[-1])[0]
             if match == BOOK_DATE[-1]:
-                full_list = "全部约满了 请重新定一个日期"
-        full_list = '11-08星期三上午'+'11-08星期三下午'
-        sendWx(bookable_list, full_list, BOOK_DATE, doctor_name)  # 向微信推消息。
-        email_message = FORMATED_MESSAGE.format(bookable_list, full_list)
+                full_string = "全部约满了 请重新定一个日期"
+
+        sendWx(bookable_string, full_string, BOOK_DATE, doctor_name)  # 向微信推消息。
+        email_message = FORMATED_MESSAGE.format(bookable_string, full_string)
     else:
         email_message = "全都未出号"
     email_path = "email.txt"
