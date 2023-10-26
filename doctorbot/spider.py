@@ -39,7 +39,7 @@ def saveEmail(email_path, message):
     with open(email_path, 'w', encoding="utf-8") as email:
         email.writelines(message)
 
-def sendWx(now_formatted,doctor_name,bookable_list,full_list,BOOK_DATE,):
+def sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string):
     app_id = os.environ["APP_ID"]
     app_secret = os.environ["APP_SECRET"]
     user_ids = os.environ["USER_ID"].split(',')
