@@ -29,7 +29,7 @@ def getResult(DATE,SITE):
         m_d = date[0].split("2023-")[1]
         if m_d in DATE:
             flag = True
-            time = m_d + date[1] + date[2]
+            time = [m_d + date[1] + date[2]]
             if item.xpath('./a/text()')[0] == "可预约":
                 bookable.append(time)
             else:
