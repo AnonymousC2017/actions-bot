@@ -39,8 +39,6 @@ def getResult(DATE, SITE):
 def saveEmail(email_path, message):
     with open(email_path, 'w', encoding="utf-8") as email:
         email.writelines(message)
-def get_random_color():
-  return "#%06x" % random.randint(0, 0xFFFFFF)
 
 def sendWx(bookable_list, full_list, BOOK_DATE, doctor_name):
     app_id = os.environ["APP_ID"]
