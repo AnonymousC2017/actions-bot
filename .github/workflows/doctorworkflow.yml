@@ -1,11 +1,7 @@
 name: 'doctorBot'
 
 on:
-  push:
-    branches: 
-      - master
-  schedule:
-    - cron: '*/30 * * * *'
+  workflow_dispatch
 
 jobs:
   doctorbot:
@@ -42,7 +38,7 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: 医生预约
           body: file://email.txt
-          to: ${{ secrets.to_email }} 
+          to: ${{ secrets.to_email }}
           from: GitHub Actions
           content_type: text/plain
 
