@@ -116,6 +116,7 @@ if __name__ == "__main__":
         if push_msg: #推送
             sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)  # 向钉钉推送消息
             send_msg(message) # 向钉钉推送消息
+        send_msg(message)
 
     else:
         message = "全都未出号"
