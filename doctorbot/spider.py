@@ -23,7 +23,7 @@ def getResult(DATE, SITE):
     doctor_name = tree.xpath('//div[@class="docBox"]/div[@class="docNav"]/span/i/text()')[0]
     for item in items:
         date = item.xpath('./h1/text()')[0].split(" ")
-        m_d = date[0].split("2023-")[1]
+        m_d = date[0].split("2024-")[1]
         if m_d in DATE:
             flag = True
             time = m_d + date[1] + date[2]
