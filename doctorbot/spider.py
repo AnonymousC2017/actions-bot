@@ -117,7 +117,7 @@ if __name__ == "__main__":
             sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)  # 向钉钉推送消息
             send_msg(message) # 向钉钉推送消息
         send_msg(message)
-
+        sendWx(now_formatted,doctor_name,BOOK_DATE,full_string,bookable_string)
     else:
         message = "全都未出号"
     email_path = "email.txt"
